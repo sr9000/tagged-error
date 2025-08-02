@@ -1,0 +1,48 @@
+name: coverage
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    name: coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Checkout wiki
+        uses: actions/checkout@v3
+        with:
+          repository: ${{github.repository}}.wiki
+          path: ./.github/wiki/
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+
+      - name: Test
+        run: |
+          go test -v -coverprofile=coverage.tmp.out ./...
+          cat coverage.tmp.out | grep -v "monad.go" > coverage.out
+
+      - name: Generate coverage report
+        shell: bash
+        env:
+          REPO_NAME: ${{ env.REPOSITORY_NAME }}
+        run: |
+          bash create-coverage-report.sh
+          mv coverage.svg ./.github/wiki/
+          test ! -f coverage.html || mv coverage.html ./.github/wiki/
+          cat coverage.log >> ./.github/wiki/coverage.log
+          sort -u -o ./.github/wiki/coverage.log ./.github/wiki/coverage.log
+
+      - name: Push to wiki
+        shell: bash
+        run: |
+          cd ./.github/wiki/
+          git add --all
+          git diff-index --quiet HEAD && exit
+          git config --local user.name "GitHub Action"
+          git config --local user.email "action@github.com"
+          git commit -m "Update coverage" && git push
