@@ -25,20 +25,21 @@ func (e taggedError) Error() string {
 		return e.tags[b] - e.tags[a] // latest added tag comes first
 	})
 
-	var sb strings.Builder
-	sb.WriteByte('[')
+	var builder strings.Builder
 
-	sb.WriteString(fmt.Sprint(slice[0]))
+	builder.WriteByte('[')
+
+	builder.WriteString(fmt.Sprint(slice[0]))
 
 	for _, t := range slice[1:] {
-		sb.WriteString(" | ")
-		sb.WriteString(fmt.Sprint(t))
+		builder.WriteString(" | ")
+		builder.WriteString(fmt.Sprint(t))
 	}
 
-	sb.WriteString("] @ ")
-	sb.WriteString(e.err.Error())
+	builder.WriteString("] @ ")
+	builder.WriteString(e.err.Error())
 
-	return sb.String()
+	return builder.String()
 }
 
 func (e taggedError) Unwrap() error {
