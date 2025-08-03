@@ -14,7 +14,7 @@ func wrap(err error) taggedError {
 }
 
 // WithTag is a convenience function to add a single custom tag to an error.
-func WithTag[T ETag](err error, tag T) error {
+func WithTag[T Tag](err error, tag T) error {
 	if err == nil {
 		return nil
 	}
@@ -29,7 +29,7 @@ func WithTag[T ETag](err error, tag T) error {
 }
 
 // WithTag2 is a convenience function to add two custom tags to an error.
-func WithTag2[T1, T2 ETag](err error, tag1 T1, tag2 T2) error {
+func WithTag2[T1, T2 Tag](err error, tag1 T1, tag2 T2) error {
 	if err == nil {
 		return nil
 	}
@@ -48,7 +48,7 @@ func WithTag2[T1, T2 ETag](err error, tag1 T1, tag2 T2) error {
 }
 
 // WithTag3 is a convenience function to add three custom tags to an error.
-func WithTag3[T1, T2, T3 ETag](err error, tag1 T1, tag2 T2, tag3 T3) error {
+func WithTag3[T1, T2, T3 Tag](err error, tag1 T1, tag2 T2, tag3 T3) error {
 	if err == nil {
 		return nil
 	}
